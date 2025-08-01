@@ -1,15 +1,22 @@
 package com.alura.ForoHub.controller;
 
-import com.alura.ForoHub.dto.DatosRegistroTopico;
-import com.alura.ForoHub.dto.TopicoResponse;
-import com.alura.ForoHub.model.Topico;
-import com.alura.ForoHub.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alura.ForoHub.dto.DatosRegistroTopico;
+import com.alura.ForoHub.dto.TopicoResponse;
+import com.alura.ForoHub.model.Topico;
+import com.alura.ForoHub.repository.TopicoRepository;
 
 import jakarta.validation.Valid;
 
@@ -42,14 +49,29 @@ public class TopicoController {
 
         return repository.findByCursoAndYear(curso, year, pageable)
         .map(t -> new TopicoResponse(
-                t.getTitulo(),
-                t.getMensaje(),
-                t.getFechaCreacion(),
-                t.getStatus().toString(),
-                t.getAutor(),
-                t.getCurso()
+            t.getTitulo(),
+            t.getMensaje(),
+            t.getFechaCreacion(),
+            t.getStatus().toString(),
+            t.getAutor(),
+            t.getCurso()
         ));
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoResponse> obtenerDetalle(@PathVariable Long id) {
+        return repository.findById(id)
+            .map(t -> new TopicoResponse(
+                    t.getTitulo(),
+                    t.getMensaje(),
+                    t.getFechaCreacion(),
+                    t.getStatus().toString(),
+                    t.getAutor(),
+                    t.getCurso()
+            ))
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+}
 }
 
