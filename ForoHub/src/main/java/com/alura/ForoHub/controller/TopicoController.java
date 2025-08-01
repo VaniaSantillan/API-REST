@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alura.ForoHub.dto.DatosActualizarTopico;
 import com.alura.ForoHub.dto.DatosRegistroTopico;
 import com.alura.ForoHub.dto.TopicoResponse;
 import com.alura.ForoHub.model.Topico;
@@ -72,6 +74,33 @@ public class TopicoController {
             ))
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
-}
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarTopico(@PathVariable Long id, @RequestBody @Valid DatosActualizarTopico datos) {
+        var optionalTopico = repository.findById(id);
+
+        if (optionalTopico.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var topico = optionalTopico.get();
+
+        // Validar que no exista otro tópico con el mismo título y mensaje
+        var duplicado = repository.findByTituloAndMensaje(datos.titulo(), datos.mensaje());
+        if (duplicado.isPresent() && !duplicado.get().getId().equals(id)) {
+            return ResponseEntity.badRequest().body("Ya existe un tópico con ese título y mensaje.");
+        }
+
+        // Actualizamos los datos
+        topico.setTitulo(datos.titulo());
+        topico.setMensaje(datos.mensaje());
+        topico.setAutor(datos.autor());
+        topico.setCurso(datos.curso());
+
+        repository.save(topico);
+        return ResponseEntity.ok("Tópico actualizado correctamente.");
+    }
+
 }
 
