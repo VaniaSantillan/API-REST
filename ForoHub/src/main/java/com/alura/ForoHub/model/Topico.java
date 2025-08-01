@@ -1,6 +1,10 @@
 package com.alura.ForoHub.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +23,11 @@ public class Topico {
 
     private String titulo;
     private String mensaje;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+
     private String autor;
     private String curso;
 
@@ -70,5 +79,21 @@ public class Topico {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public StatusTopico getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusTopico status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }
