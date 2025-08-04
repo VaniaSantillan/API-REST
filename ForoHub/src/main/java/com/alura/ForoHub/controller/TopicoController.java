@@ -62,6 +62,7 @@ public class TopicoController {
 
     }
 
+    //Detalle de un topico
     @GetMapping("/{id}")
     public ResponseEntity<TopicoResponse> obtenerDetalle(@PathVariable Long id) {
         return repository.findById(id)
@@ -77,6 +78,7 @@ public class TopicoController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    //Actualización de tópico 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarTopico(@PathVariable Long id, @RequestBody @Valid DatosActualizarTopico datos) {
         var optionalTopico = repository.findById(id);
@@ -103,6 +105,7 @@ public class TopicoController {
         return ResponseEntity.ok("Tópico actualizado correctamente.");
     }
 
+    //Eliminar tópico
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarTopico(@PathVariable Long id) {
         var optionalTopico = repository.findById(id);
