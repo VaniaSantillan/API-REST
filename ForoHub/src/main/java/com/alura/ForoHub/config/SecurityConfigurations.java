@@ -1,7 +1,5 @@
 package com.alura.ForoHub.config;
 
-import com.alura.ForoHub.repository.UsuarioRepository;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.alura.ForoHub.repository.UsuarioRepository;
 
 @Configuration
 public class SecurityConfigurations {
@@ -49,4 +49,6 @@ public class SecurityConfigurations {
                 .httpBasic(withDefaults());
         return http.build();
     }
+    
+
 }
