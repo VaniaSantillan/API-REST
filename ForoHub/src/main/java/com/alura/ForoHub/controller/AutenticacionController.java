@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alura.ForoHub.dto.DatosJWTToken;
 import com.alura.ForoHub.dto.DatosLogin;
 import com.alura.ForoHub.service.TokenService;
 
@@ -27,10 +28,12 @@ public class AutenticacionController {
     }
 
     @PostMapping
-    public String login(@RequestBody @Valid DatosLogin datos) {
+    public DatosJWTToken login(@RequestBody @Valid DatosLogin datos) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(datos.login(), datos.clave());
         authenticationManager.authenticate(authToken);
-        return tokenService.generarToken(datos.login());
+        String token = tokenService.generarToken(datos.login());
+        return new DatosJWTToken(token);
     }
+
 }
 
